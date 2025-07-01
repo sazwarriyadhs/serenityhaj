@@ -5,6 +5,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReactDOMServer from 'react-dom/server';
+import { useState, useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Pilgrim {
     id: number;
@@ -34,7 +36,16 @@ const createPilgrimIcon = (pilgrim: Pilgrim) => {
 };
 
 export default function LiveMap({ pilgrims }: LiveMapProps) {
+    const [isMounted, setIsMounted] = useState(false);
     const mapCenter: [number, number] = [21.4225, 39.8262];
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return <Skeleton className="w-full aspect-video rounded-lg" />;
+    }
 
     return (
         <MapContainer center={mapCenter} zoom={16} scrollWheelZoom={true} className="w-full aspect-video rounded-lg overflow-hidden border">
