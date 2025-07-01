@@ -7,6 +7,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 
+// FIX for default icon path issue with bundlers
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// This is a common fix for Leaflet in React environments.
+// It ensures that the default icon paths are correctly set up.
+// @ts-ignore
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x.src,
+  iconUrl: markerIcon.src,
+  shadowUrl: markerShadow.src,
+});
+
 interface Pilgrim {
     id: number;
     name: string;
@@ -19,6 +34,7 @@ interface LiveMapProps {
     pilgrims: Pilgrim[];
 }
 
+// Move icon creation outside the component to prevent re-creation on render
 const createPilgrimIcon = (pilgrim: Pilgrim) => {
     return L.divIcon({
         html: ReactDOMServer.renderToString(
