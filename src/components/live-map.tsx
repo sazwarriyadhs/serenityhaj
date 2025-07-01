@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReactDOMServer from 'react-dom/server';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Pilgrim {
     id: number;
@@ -34,7 +34,7 @@ const createPilgrimIcon = (pilgrim: Pilgrim) => {
     });
 };
 
-export default function LiveMap({ pilgrims }: LiveMapProps) {
+function MapDisplay({ pilgrims }: LiveMapProps) {
     const mapCenter: [number, number] = [21.484, 39.647];
     const mapZoom = 9;
 
@@ -54,3 +54,22 @@ export default function LiveMap({ pilgrims }: LiveMapProps) {
         </MapContainer>
     );
 };
+
+// This wrapper component ensures that the map is only rendered on the client side,
+// after the component has mounted. This prevents the "Map container is already initialized" error
+// that can occur in React's Strict Mode during development.
+export default function LiveMap(props: LiveMapProps) {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    // On the server or before the component has mounted on the client, we return null.
+    // The loading state is handled by the dynamic import on the tracking page.
+    if (!isMounted) {
+        return null;
+    }
+
+    return <MapDisplay {...props} />;
+}
