@@ -27,7 +27,16 @@ const formSchema = z.object({
   }),
 });
 
-export function LoginForm() {
+interface LoginFormProps {
+  translations: {
+      title: string;
+      emailLabel: string;
+      passwordLabel: string;
+      loginButton: string;
+  }
+}
+
+export function LoginForm({ translations }: LoginFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,7 +58,7 @@ export function LoginForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Sign In</CardTitle>
+            <CardTitle className="font-headline text-2xl">{translations.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -57,7 +66,7 @@ export function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{translations.emailLabel}</FormLabel>
                   <FormControl>
                     <Input placeholder="name@example.com" {...field} />
                   </FormControl>
@@ -70,7 +79,7 @@ export function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{translations.passwordLabel}</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
@@ -81,7 +90,7 @@ export function LoginForm() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">
-              Login
+              {translations.loginButton}
             </Button>
           </CardFooter>
         </form>

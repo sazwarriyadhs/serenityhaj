@@ -37,7 +37,21 @@ const formSchema = z.object({
   role: z.enum(["pilgrim", "family", "agent"]),
 });
 
-export function RegisterForm() {
+interface RegisterFormProps {
+    translations: {
+        title: string;
+        fullNameLabel: string;
+        emailLabel: string;
+        passwordLabel: string;
+        roleLabel: string;
+        rolePilgrim: string;
+        roleFamily: string;
+        roleAgent: string;
+        submitButton: string;
+    }
+}
+
+export function RegisterForm({ translations }: RegisterFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,7 +75,7 @@ export function RegisterForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Get Started</CardTitle>
+            <CardTitle className="font-headline text-2xl">{translations.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -69,7 +83,7 @@ export function RegisterForm() {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{translations.fullNameLabel}</FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
@@ -82,7 +96,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{translations.emailLabel}</FormLabel>
                   <FormControl>
                     <Input placeholder="name@example.com" {...field} />
                   </FormControl>
@@ -95,7 +109,7 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{translations.passwordLabel}</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
@@ -108,7 +122,7 @@ export function RegisterForm() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>I am a...</FormLabel>
+                  <FormLabel>{translations.roleLabel}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -116,9 +130,9 @@ export function RegisterForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="pilgrim">Pilgrim</SelectItem>
-                      <SelectItem value="family">Family Member</SelectItem>
-                      <SelectItem value="agent">Travel Agent</SelectItem>
+                      <SelectItem value="pilgrim">{translations.rolePilgrim}</SelectItem>
+                      <SelectItem value="family">{translations.roleFamily}</SelectItem>
+                      <SelectItem value="agent">{translations.roleAgent}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -128,7 +142,7 @@ export function RegisterForm() {
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full">
-              Create Account
+              {translations.submitButton}
             </Button>
           </CardFooter>
         </form>
