@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const pilgrims = [
@@ -12,12 +11,12 @@ const pilgrims = [
     { id: 4, name: 'Yusuf I.', position: [21.4240, 39.8275] as [number, number], image: 'https://placehold.co/40x40.png', hint: 'man portrait' },
 ];
 
-export default function TrackingPage() {
-  const LiveMap = useMemo(() => dynamic(() => import('@/components/live-map'), {
-    ssr: false,
-    loading: () => <Skeleton className="w-full aspect-video rounded-lg" />
-  }), []);
+const LiveMap = dynamic(() => import('@/components/live-map'), {
+  ssr: false,
+  loading: () => <Skeleton className="w-full aspect-video rounded-lg" />
+});
 
+export default function TrackingPage() {
   return (
     <div className="space-y-8">
       <div>
