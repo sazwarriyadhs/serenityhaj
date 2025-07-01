@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReactDOMServer from 'react-dom/server';
+import React, { useState, useEffect } from 'react';
 
 interface Pilgrim {
     id: number;
@@ -33,11 +34,12 @@ const createPilgrimIcon = (pilgrim: Pilgrim) => {
     });
 };
 
-export default function LiveMap({ pilgrims }: LiveMapProps) {
-    const mapCenter: [number, number] = [21.4225, 39.8262];
+const MapDisplay = ({ pilgrims }: LiveMapProps) => {
+    const mapCenter: [number, number] = [21.484, 39.647];
+    const mapZoom = 9;
 
     return (
-        <MapContainer center={mapCenter} zoom={16} scrollWheelZoom={true} className="w-full aspect-video rounded-lg overflow-hidden border">
+        <MapContainer center={mapCenter} zoom={mapZoom} scrollWheelZoom={true} className="w-full aspect-video rounded-lg overflow-hidden border">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -51,4 +53,15 @@ export default function LiveMap({ pilgrims }: LiveMapProps) {
             ))}
         </MapContainer>
     );
+};
+
+
+export default function LiveMap({ pilgrims }: LiveMapProps) {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    return <>{isClient && <MapDisplay pilgrims={pilgrims} />}</>;
 }
