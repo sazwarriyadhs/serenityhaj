@@ -1,14 +1,18 @@
-import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const pilgrims = [
-    { id: 1, name: 'Siti A.', position: { top: '30%', left: '45%' }, image: 'https://placehold.co/40x40.png', hint: 'woman portrait' },
-    { id: 2, name: 'Ahmad H.', position: { top: '55%', left: '50%' }, image: 'https://placehold.co/40x40.png', hint: 'man portrait' },
-    { id: 3, name: 'Fatima Z.', position: { top: '60%', left: '35%' }, image: 'https://placehold.co/40x40.png', hint: 'woman portrait' },
-    { id: 4, name: 'Yusuf I.', position: { top: '45%', left: '65%' }, image: 'https://placehold.co/40x40.png', hint: 'man portrait' },
+    { id: 1, name: 'Siti A.', position: [21.4235, 39.8255] as [number, number], image: 'https://placehold.co/40x40.png', hint: 'woman portrait' },
+    { id: 2, name: 'Ahmad H.', position: [21.4220, 39.8268] as [number, number], image: 'https://placehold.co/40x40.png', hint: 'man portrait' },
+    { id: 3, name: 'Fatima Z.', position: [21.4215, 39.8250] as [number, number], image: 'https://placehold.co/40x40.png', hint: 'woman portrait' },
+    { id: 4, name: 'Yusuf I.', position: [21.4240, 39.8275] as [number, number], image: 'https://placehold.co/40x40.png', hint: 'man portrait' },
 ];
+
+const LiveMap = dynamic(() => import('@/components/live-map'), {
+    ssr: false,
+    loading: () => <Skeleton className="w-full aspect-video rounded-lg" />
+});
 
 export default function TrackingPage() {
   return (
@@ -21,38 +25,10 @@ export default function TrackingPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-headline">Group 3B Location Map</CardTitle>
-          <CardDescription>Last updated: 2 minutes ago. Hover over an avatar for details.</CardDescription>
+          <CardDescription>Last updated: just now. Click on an avatar for details.</CardDescription>
         </CardHeader>
         <CardContent>
-          <TooltipProvider>
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden border">
-              <Image
-                src="https://placehold.co/1200x800.png"
-                alt="Map of Mecca"
-                layout="fill"
-                objectFit="cover"
-                data-ai-hint="mecca map"
-              />
-              {pilgrims.map(pilgrim => (
-                <Tooltip key={pilgrim.id}>
-                  <TooltipTrigger asChild>
-                    <div 
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer" 
-                      style={{ top: pilgrim.position.top, left: pilgrim.position.left }}
-                    >
-                      <Avatar className="h-10 w-10 border-2 border-white shadow-lg transition-transform hover:scale-110">
-                        <AvatarImage src={pilgrim.image} alt={pilgrim.name} data-ai-hint={pilgrim.hint} />
-                        <AvatarFallback>{pilgrim.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{pilgrim.name}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
-          </TooltipProvider>
+          <LiveMap pilgrims={pilgrims} />
         </CardContent>
       </Card>
     </div>
