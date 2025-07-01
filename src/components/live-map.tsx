@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ReactDOMServer from 'react-dom/server';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface Pilgrim {
     id: number;
@@ -34,7 +34,7 @@ const createPilgrimIcon = (pilgrim: Pilgrim) => {
     });
 };
 
-const MapDisplay = ({ pilgrims }: LiveMapProps) => {
+export default function LiveMap({ pilgrims }: LiveMapProps) {
     const mapCenter: [number, number] = [21.484, 39.647];
     const mapZoom = 9;
 
@@ -54,14 +54,3 @@ const MapDisplay = ({ pilgrims }: LiveMapProps) => {
         </MapContainer>
     );
 };
-
-
-export default function LiveMap({ pilgrims }: LiveMapProps) {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    return <>{isClient && <MapDisplay pilgrims={pilgrims} />}</>;
-}
